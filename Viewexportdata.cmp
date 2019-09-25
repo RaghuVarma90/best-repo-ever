@@ -1,0 +1,44 @@
+<aura:component controller="Viewexportdata" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+		<aura:attribute name="objects" type="list" default="[]"/>
+        <aura:attribute name="fields" type="list" default="[]"/>
+        <aura:attribute name="selectedFieldList" type="List" default="[]"/>
+        <aura:attribute name="objectName" type="string"/>
+        <aura:attribute name="selectedFieldListwhere" type="List" default="[]"/>
+        <aura:attribute name="recordList" type="sobject"/>
+        
+        <lightning:card>
+        <input type="file" class="file" aura:id="file" accept=".csv, .CSV" />
+       </lightning:card>
+       <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    
+        <lightning:layoutItem size="12" padding="around-small">    
+             <lightning:select name="objectName" label="Select Object" aura:id="selectedObject" onchange="{!c.handleObjectSelect}">
+                <option value="">--- Select ---</option>
+                <aura:iteration items="{!v.objects}" var="obj">
+                    <option value="{!obj}">{!obj}</option>
+                    
+                </aura:iteration>
+            </lightning:select>
+            <lightning:dualListbox aura:id="SelectField"
+                               name="Select Fields"
+                               label="Select Fields"
+                               sourceLabel="Available Fields"
+                               selectedLabel="Selected Fields"
+                               options="{!v.fields}"
+                               value="{!v.selectedFieldList}"
+                               onchange="{!c.handleFieldSelect}"/>
+            
+            <lightning:dualListbox aura:id="SelectFieldwhere"
+                               name="Select Fields"
+                               label="Where condition"
+                               sourceLabel="Available Fields"
+                               selectedLabel="Selected Fields"
+                               options="{!v.fields}"
+                               value="{!v.selectedFieldListwhere}"
+                               onchange="{!c.handleFieldSelectone}"/>
+             <lightning:textarea aura:id="query" name="SOQL Query" label="SOQL Query" value="{!'SELECT'+' '+v.selectedFieldList+' '+'FROM'+' '+v.objectName+' '+'WHERE'+' '+v.selectedFieldListwhere+' '+'IN'}"/>
+             <lightning:button variant="brand" label="Download CSV" onclick="{! c.downloadCSV }" />            
+      </lightning:layoutItem>     
+    
+    
+</aura:component>
